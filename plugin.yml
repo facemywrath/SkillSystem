@@ -1,0 +1,15 @@
+name: SkillSystem
+main: riseofempires.skillsystem.main.SkillSystem
+author: facemywrath
+version: 1.0
+depend: [RoeCore]
+commands:
+    bind:
+        usage: /<command>
+        description: Bind a skill to an item.
+    cast:
+        usage: /<command>
+        description: Cast a skill.
+    skills:
+        usage: /<command>
+        description: Base skills command.
