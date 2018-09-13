@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 import riseofempires.skillsystem.main.SkillSystem;
 import riseofempires.skillsystem.skillhandling.abstraction.AbstractSkill;
+import riseofempires.skillsystem.skillhandling.managers.ProjectileStorage;
 import riseofempires.skillsystem.skillhandling.managers.SkillManager;
 import riseofempires.skillsystem.skillhandling.storage.SkillRarity;
 import riseofempires.skillsystem.skillhandling.storage.SkillType;
@@ -37,7 +38,7 @@ public class Fireball extends AbstractSkill{
 		Snowball ball = player.launchProjectile(Snowball.class);
 		ball.setVelocity(ball.getVelocity().multiply(1.1));
 		ball.setFireTicks(10000000);
-		sm.launchProjectile(player, ball, (float) (this.getDamage(rarity) + level*this.getScaling().getDamage()));
+		sm.launchProjectile(ball, new ProjectileStorage(player, (float) (this.getDamage(rarity) + level*this.getScaling().getDamage())));
 		return true;
 	}
 

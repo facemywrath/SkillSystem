@@ -27,6 +27,8 @@ public abstract class AbstractSkill{
 	private ItemStack indicator;
 	private int overallMaxLevel;
 	
+	private byte id;
+	
 	private HashMap<Player, Marker<Long>> cooldowns = new HashMap<>();
 
 	public AbstractSkill(SkillSystem system, String name, SkillType type, SkillUsage usage, ItemStack indicator, int maxLevel, StatPackage scaling) {
@@ -41,6 +43,11 @@ public abstract class AbstractSkill{
 		stats.keySet().stream().forEach(sr -> this.stats.put(sr, stats.get(sr)));
 	}
 	
+	public void setId(int id)
+	{
+		this.id = (byte) id;
+	}
+	
 	public void updateCooldown(Player player, Long cooldown)
 	{
 		cooldowns.put(player, new Marker<Long>(cooldown));
@@ -52,6 +59,16 @@ public abstract class AbstractSkill{
 		Marker<Long> cd = cooldowns.get(player);
 		if(cd.getItem() <= cd.getMillisPassedSince()) return false;
 		return true;
+	}
+	
+	public void removeCooldown(Player player)
+	{
+		if(cooldownContains(player)) cooldowns.remove(player);
+	}
+	
+	public boolean cooldownContains(Player player)
+	{
+		return cooldowns.containsKey(player);
 	}
 	
 	public String getName()

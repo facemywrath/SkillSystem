@@ -3,6 +3,7 @@ package riseofempires.skillsystem.skillhandling.managers;
 import java.util.HashMap;
 
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -40,9 +41,10 @@ public class SkillManager {
 			System.out.println("ERROR: Skill " + skill.getName() + " attempted registry twice.");
 	}
 
-	public void launchProjectile(Player player, Projectile proj, float damage)
+	public ProjectileStorage launchProjectile(Projectile proj, ProjectileStorage storage)
 	{
-		this.projectileManager.launchProjectile(player, proj, damage);
+		this.projectileManager.launchProjectile(proj, storage);
+		return storage;
 	}
 
 	public void attemptCast(Player player, SkillStorage ss)
@@ -118,6 +120,12 @@ public class SkillManager {
 			if(skill.equalsIgnoreCase(str)) return skills.get(skill);
 		}
 		return null;
+	}
+	
+	public Block getTargetBlock(Player player, float range)
+	{
+		Block block = player.getTargetBlock(null, (int) range);
+		return block==null?null:block;
 	}
 
 	public static AbstractSkill getAbstractSkillByName(String str)

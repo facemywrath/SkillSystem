@@ -42,10 +42,10 @@ public class CMDSkills implements CommandExecutor {
 			return true;
 		}
 		List<SkillStorage> skills = user.getSkillList();
-		player.sendMessage("Your current skills: ");
+		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7Your current skills: "));
 		for(SkillStorage skill : skills)
 		{
-			player.sendMessage(skill.getRarity().toString() + " " + skill.getSkill().getName() + " Level " + skill.getLevel());
+			player.sendMessage(ChatColor.translateAlternateColorCodes('&', skill.getRarity().formatName() + " " + skill.getSkill().getName() + " Level " + skill.getLevel()));
 		}
 		return true;
 	}

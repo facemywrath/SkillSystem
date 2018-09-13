@@ -10,11 +10,15 @@ import riseofempires.core.main.Core;
 import riseofempires.skillsystem.commandhandler.CommandManager;
 import riseofempires.skillsystem.skillhandling.abstraction.AbstractSkill;
 import riseofempires.skillsystem.skillhandling.managers.SkillManager;
+import riseofempires.skillsystem.skills.Blizzard;
 import riseofempires.skillsystem.skills.Fireball;
 import riseofempires.skillsystem.skills.Fireblast;
 import riseofempires.skillsystem.skills.Firewave;
 import riseofempires.skillsystem.skills.Recovery;
 import riseofempires.skillsystem.skills.Rejuvinate;
+import riseofempires.skillsystem.skills.StoneEater;
+import riseofempires.skillsystem.skills.Thunderstorm;
+import riseofempires.skillsystem.skills.VolatileReflex;
 
 public class SkillSystem extends JavaPlugin {
 	
@@ -49,7 +53,11 @@ public class SkillSystem extends JavaPlugin {
 	}
 
 	public void registerSkills() {
-		List<AbstractSkill> skills = Arrays.asList(new Fireball(this), new Firewave(this), new Fireblast(this), new Rejuvinate(this), new Recovery(this));
+		List<AbstractSkill> skills = Arrays.asList(new Fireball(this), new StoneEater(this), new VolatileReflex(this), new Blizzard(this), new Thunderstorm(this), new Firewave(this), new Fireblast(this), new Rejuvinate(this), new Recovery(this));
+		for(int i = 0; i < skills.size(); i++)
+		{
+			skills.get(i).setId(i);
+		}
 		skills.stream().forEach(skill -> skillManager.registerAbstractSkill(skill));
 	}
 

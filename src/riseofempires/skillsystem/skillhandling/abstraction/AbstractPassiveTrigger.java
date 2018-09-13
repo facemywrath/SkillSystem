@@ -3,30 +3,31 @@ package riseofempires.skillsystem.skillhandling.abstraction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
 import riseofempires.skillsystem.main.SkillSystem;
-import riseofempires.skillsystem.skillhandling.storage.SkillRarity;
 import riseofempires.skillsystem.skillhandling.storage.SkillType;
 import riseofempires.skillsystem.skillhandling.storage.SkillUsage;
 import riseofempires.skillsystem.skillhandling.storage.StatPackage;
 
-public class AbstractPassive extends AbstractSkill implements Listener {
+public abstract class AbstractPassiveTrigger<T extends Event> extends AbstractSkill implements Consumer<T> {
 	
 	private List<UUID> enabled = new ArrayList<>();
 
-	public AbstractPassive(SkillSystem system, String name, SkillType type, SkillUsage usage, ItemStack indicator,
+	public AbstractPassiveTrigger(SkillSystem system, Class<T> classType, String name, SkillType type, SkillUsage usage, ItemStack indicator,
 			int maxLevel, StatPackage scaling) {
 		super(system, name, type, usage, indicator, maxLevel, scaling);
-		getMain().getServer().getPluginManager().registerEvents(this, getMain());
+		Events.listen(system, classType, event -> this.accept((T) event));
 	}
 	
-	public boolean autoCast(Player player, SkillRarity rarity, int level)
+	public void accept(T event)
 	{
-		return false;
+		return;
 	}
 	
 	public boolean isEnabled(Player player)

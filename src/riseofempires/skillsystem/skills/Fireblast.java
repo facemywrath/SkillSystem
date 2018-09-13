@@ -10,6 +10,7 @@ import org.bukkit.util.Vector;
 
 import riseofempires.skillsystem.main.SkillSystem;
 import riseofempires.skillsystem.skillhandling.abstraction.AbstractSkill;
+import riseofempires.skillsystem.skillhandling.managers.ProjectileStorage;
 import riseofempires.skillsystem.skillhandling.managers.SkillManager;
 import riseofempires.skillsystem.skillhandling.storage.SkillRarity;
 import riseofempires.skillsystem.skillhandling.storage.SkillType;
@@ -20,7 +21,7 @@ import riseofempires.skillsystem.util.Numbers;
 public class Fireblast extends AbstractSkill{
 
 	public Fireblast(SkillSystem main) {
-		super(main, "Fireblast", SkillType.EVOCATION, SkillUsage.SKILLSHOT, new ItemStack(Material.FIREBALL), 20, new StatPackage(0f).setCooldown(-65f).setDamage(0.2f).setManaCost(0.1f).setDescription(ChatColor.translateAlternateColorCodes('&', "&9Shoot a barrage of fireballs in the direction you're looking.")));
+		super(main, "Fireblast", SkillType.EVOCATION, SkillUsage.SKILLSHOT, new ItemStack(Material.FIREBALL), 20, new StatPackage(0f).setCooldown(-65f).setDamage(0.1f).setManaCost(0.1f).setDescription(ChatColor.translateAlternateColorCodes('&', "&9Shoot a barrage of fireballs in the direction you're looking.")));
 		this.setStats(SkillRarity.TRASH, new StatPackage(1).setCooldown(8000).setDamage(2).setManaCost(5));
 		this.setStats(SkillRarity.COMMON, new StatPackage(3).setCooldown(7000).setDamage(2).setManaCost(4));
 		this.setStats(SkillRarity.UNCOMMON, new StatPackage(5).setCooldown(6500).setDamage(1.5f).setManaCost(4));
@@ -35,7 +36,7 @@ public class Fireblast extends AbstractSkill{
 	public boolean cast(LivingEntity shooter, int level, SkillRarity rarity) {
 		Player player = (Player) shooter;
 		SkillManager sm = getMain().getSkillManager();
-		int count = (level*2+2);
+		int count = ((int)(level/1.5)+3);
 		for(int i = 0; i < count; i++)
 		{
 			Snowball ball = player.launchProjectile(Snowball.class);
@@ -44,7 +45,7 @@ public class Fireblast extends AbstractSkill{
 			float randz = Numbers.getRandom(-100, 100)/400.0f;
 			ball.setVelocity(ball.getVelocity().multiply(new Vector(1+randx, 1+randy, 1+randz)));
 			ball.setFireTicks(10000000);
-			sm.launchProjectile(player, ball, (float) (this.getDamage(rarity) + level*this.getScaling().getDamage()));
+			sm.launchProjectile(ball, new ProjectileStorage(player, (float) (this.getDamage(rarity) + level*this.getScaling().getDamage())));
 		}
 		return true;
 	}
