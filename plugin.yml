@@ -13,3 +13,6 @@ commands:
     skills:
         usage: /<command>
         description: Base skills command.
+    mana:
+        usage: /<command>
+        description: View your mana

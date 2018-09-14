@@ -61,6 +61,14 @@ public abstract class AbstractSkill{
 		return true;
 	}
 	
+	public float getRange(SkillRarity rarity)
+	{
+		if(stats.containsKey(rarity))
+			if(stats.get(rarity).getRange() > 1)
+				return stats.get(rarity).getRange();
+		return 1;
+	}
+	
 	public void removeCooldown(Player player)
 	{
 		if(cooldownContains(player)) cooldowns.remove(player);

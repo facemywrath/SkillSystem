@@ -8,13 +8,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import riseofempires.core.main.Core;
 import riseofempires.core.userhandler.SkillStorage;
 import riseofempires.core.userhandler.User;
 import riseofempires.skillsystem.skillhandling.abstraction.AbstractSkill;
 import riseofempires.skillsystem.skillhandling.managers.SkillManager;
-import riseofempires.skillsystem.skillhandling.storage.SkillUsage;
 
 public class CMDBind implements CommandExecutor {
 
@@ -48,7 +48,13 @@ public class CMDBind implements CommandExecutor {
 		List<SkillStorage> skills = user.getSkillList();
 		if(args.length == 0)
 		{
-			player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4You must specify a skill to cast"));
+			ItemStack item = player.getItemInHand();
+			if(user.isItemBinded(item))
+			{
+				SkillStorage ss = user.getBindInformation(item);
+				user.unbindItem(item);
+				player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c" + ss.getRarity().formatName() + " " + ss.getSkill().getName() + " Level " + ss.getLevel() + " unbound from " + (item.getItemMeta().hasDisplayName()?item.getItemMeta().getDisplayName():item.getType().name().toLowerCase())));
+			}
 			return true;
 		}
 		if(SkillManager.getAbstractSkillByName(args[0]) == null)

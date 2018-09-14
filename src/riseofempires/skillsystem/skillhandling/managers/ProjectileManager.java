@@ -33,6 +33,9 @@ public class ProjectileManager implements Listener {
 	public void projectileHit(ProjectileHitEvent event)
 	{
 		if(!skillShotProjectiles.containsKey(event.getEntity())) return;
+		ProjectileStorage ps = skillShotProjectiles.get(event.getEntity());
+		if(ps.hasHitEffect())
+			ps.trigger(event);
 		if(event.getHitEntity() == null) return;
 		if(!(event.getHitEntity() instanceof LivingEntity)) return;
 		LivingEntity ent = (LivingEntity) event.getHitEntity();

@@ -6,6 +6,7 @@ public class CommandManager {
 	
 	private SkillSystem main;
 	
+	private CMDMana commandMana;
 	private CMDBind commandBind;
 	private CMDSkills commandSkills;
 	private CMDCast commandCast;
@@ -13,6 +14,7 @@ public class CommandManager {
 	public CommandManager(SkillSystem main)
 	{
 		this.main = main;
+		this.commandMana = new CMDMana(this);
 		this.commandBind = new CMDBind(this);
 		this.commandCast = new CMDCast(this);
 		this.commandSkills = new CMDSkills(this);

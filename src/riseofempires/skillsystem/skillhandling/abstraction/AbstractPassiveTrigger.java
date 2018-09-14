@@ -7,10 +7,12 @@ import java.util.function.Consumer;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 
+import net.md_5.bungee.api.ChatColor;
+import riseofempires.core.userhandler.User;
 import riseofempires.skillsystem.main.SkillSystem;
+import riseofempires.skillsystem.skillhandling.storage.SkillRarity;
 import riseofempires.skillsystem.skillhandling.storage.SkillType;
 import riseofempires.skillsystem.skillhandling.storage.SkillUsage;
 import riseofempires.skillsystem.skillhandling.storage.StatPackage;
@@ -28,6 +30,35 @@ public abstract class AbstractPassiveTrigger<T extends Event> extends AbstractSk
 	public void accept(T event)
 	{
 		return;
+	}
+	
+	public boolean attemptCast(Player player)
+	{
+		User user = this.getMain().getCore().getUserManager().getUser(player);	
+		SkillRarity rarity = user.getSkillRarity(this);
+		int level = user.getSkillLevel(this);
+		if(!user.hasSkill(this))
+		{
+			return false;
+		}
+		if(this.isOnCooldown(player))
+		{
+			return false;
+		}
+		if(this.getManaCost(rarity) + level*this.getScaling().getMana() > user.getCurrentMana())
+		{
+			return false;
+		}
+		return true;
+	}
+	
+	public void finishCast(Player player)
+	{
+		User user = this.getMain().getCore().getUserManager().getUser(player);	
+		SkillRarity rarity = user.getSkillRarity(this);
+		int level = user.getSkillLevel(this);
+		this.updateCooldown(player, (long) (1L*this.getCooldown(rarity) + 1L*this.getScaling().getCooldown()*level));
+		this.sendCastMessage(player, rarity, level);
 	}
 	
 	public boolean isEnabled(Player player)

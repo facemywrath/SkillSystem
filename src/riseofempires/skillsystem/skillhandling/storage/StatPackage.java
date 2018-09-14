@@ -9,6 +9,7 @@ public class StatPackage {
 	private float mana = -1;
 	private float healing = -1;
 	private String description;
+	private float range = 1;
 
 	public StatPackage(float maxLevel, float duration, double damage, float cooldown, float mana, String description)
 	{
@@ -107,6 +108,11 @@ public class StatPackage {
 		this.duration = i;
 		return this;
 	}
+	public StatPackage setRange(float i)
+	{
+		this.range = i;
+		return this;
+	}
 	public StatPackage setDamage(double d)
 	{
 		this.damage = d;
@@ -125,6 +131,9 @@ public class StatPackage {
 	}
 	public float getDuration() {
 		return duration;
+	}
+	public float getRange() {
+		return range;
 	}
 	public double getDamage() {
 		return damage;

@@ -45,7 +45,10 @@ public class Fireblast extends AbstractSkill{
 			float randz = Numbers.getRandom(-100, 100)/400.0f;
 			ball.setVelocity(ball.getVelocity().multiply(new Vector(1+randx, 1+randy, 1+randz)));
 			ball.setFireTicks(10000000);
-			sm.launchProjectile(ball, new ProjectileStorage(player, (float) (this.getDamage(rarity) + level*this.getScaling().getDamage())));
+			sm.launchProjectile(ball, new ProjectileStorage(player, (float) (this.getDamage(rarity) + level*this.getScaling().getDamage()), event -> {
+				if(event.getHitBlock() == null) event.getHitEntity().getWorld().createExplosion(event.getHitBlock().getLocation(), 0.3f);
+				if(event.getHitEntity() == null) event.getHitBlock().getWorld().createExplosion(event.getHitEntity().getLocation(), 0.3f);
+			}));
 		}
 		return true;
 	}
