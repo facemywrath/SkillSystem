@@ -42,7 +42,7 @@ public class DrillHands extends AbstractSkill implements IUnlockable,IToggleable
 	public boolean cast(LivingEntity caster, int level, SkillRarity rarity)
 	{
 		Player player = (Player) caster;
-		toggle(player);
+		toggle(player, rarity, level);
 		return true;
 	}
 
@@ -57,13 +57,10 @@ public class DrillHands extends AbstractSkill implements IUnlockable,IToggleable
 	}
 
 	@Override
-	public void toggle(Player player) {
+	public void toggle(Player player, SkillRarity rarity, int level) {
 		if(isEnabled(player)) activated.remove(player);
 		else 
 		{
-			User user = this.getMain().getCore().getUserManager().getUser(player);	
-			SkillRarity rarity = user.getSkillRarity(this);
-			int level = user.getSkillLevel(this);
 			Long time = (long) (this.getDuration(rarity)*1L + this.getScaling().getDuration()*1L*level);
 			activated.put(player, System.currentTimeMillis() + time);
 		}
@@ -78,5 +75,11 @@ public class DrillHands extends AbstractSkill implements IUnlockable,IToggleable
 	public Long getExpiration(Player player) {
 		if(isEnabled(player)) return activated.get(player);
 		return 0L;
+	}
+
+	@Override
+	public void toggle(Player player, LivingEntity ent, SkillRarity rarity, int level) {
+		// TODO Auto-generated method stub
+		
 	}
 }

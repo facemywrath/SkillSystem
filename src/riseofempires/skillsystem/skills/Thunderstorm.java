@@ -54,11 +54,11 @@ public class Thunderstorm extends AbstractSkill {
 		Long time = System.currentTimeMillis();
 		time += (long) (this.getScaling().getDuration()*level);
 		time += (long) (this.getDuration(rarity));
-		thunderstorm(player, botLoc, loc, level, rarity, time, radius);
+		thunderstorm(player, 0, botLoc, loc, level, rarity, time, radius);
 		return true;
 	}
 
-	public void thunderstorm(Player player, Location botLoc, Location topLoc, int level, SkillRarity rarity, Long time, int radius) {
+	public void thunderstorm(Player player, int tick, Location botLoc, Location topLoc, int level, SkillRarity rarity, Long time, int radius) {
 
 		if (System.currentTimeMillis() < time) {
 			double randx = Numbers.getRandom(-10 * radius, 10 * radius) / 10.0;
@@ -66,7 +66,7 @@ public class Thunderstorm extends AbstractSkill {
 			Location tempLoc = topLoc.clone().add(new Vector(randx,0,randz));
 			tempLoc.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, tempLoc, 3, 0.1, 0.1, 0.1, 0f);
 			tempLoc.getWorld().spawnParticle(Particle.DRIP_WATER, tempLoc, 3, 0.1, 0.1, 0.1, 0f);
-			if(System.currentTimeMillis()%100 > 80)
+			if(tick%30 == 0)
 			{
 				List<Entity> nearby = (List<Entity>) botLoc.getWorld().getNearbyEntities(botLoc, radius, 2, radius);
 				if(nearby.size() == 0) return;
@@ -87,7 +87,7 @@ public class Thunderstorm extends AbstractSkill {
 				}
 			}
 			SkillManager sm = getMain().getSkillManager();
-			getMain().getServer().getScheduler().runTaskLater(getMain(), () -> { thunderstorm(player, botLoc, topLoc, level, rarity, time, radius);
+			getMain().getServer().getScheduler().runTaskLater(getMain(), () -> { thunderstorm(player, tick+1, botLoc, topLoc, level, rarity, time, radius);
 			}, 1L);
 		}
 	}

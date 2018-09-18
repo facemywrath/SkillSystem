@@ -39,11 +39,11 @@ public class Xray extends AbstractSkill implements IToggleable{
 	public boolean cast(LivingEntity caster, int level, SkillRarity rarity)
 	{
 		Player player = (Player) caster;
-		this.getMain().getServer().getScheduler().runTaskLater(this.getMain(), () -> toggle(player), 2L);
+		this.getMain().getServer().getScheduler().runTaskLater(this.getMain(), () -> toggle(player, rarity, level), 2L);
 		return true;
 	}
 	@Override
-	public void toggle(Player player) {
+	public void toggle(Player player, SkillRarity rarity, int level) {
 		if(isEnabled(player)) 
 		{
 			activated.remove(player);
@@ -52,9 +52,6 @@ public class Xray extends AbstractSkill implements IToggleable{
 		}
 		else 
 		{
-			User user = this.getMain().getCore().getUserManager().getUser(player);	
-			SkillRarity rarity = user.getSkillRarity(this);
-			int level = user.getSkillLevel(this);
 			Long time = (long) (this.getDuration(rarity)*1L + this.getScaling().getDuration()*1L*level);
 			int radius = level+5;
 			List<Block> blocks = new ArrayList<>();
@@ -88,5 +85,11 @@ public class Xray extends AbstractSkill implements IToggleable{
 	public Long getExpiration(Player player) {
 		if(isEnabled(player)) return activated.get(player);
 		return 0L;
+	}
+
+	@Override
+	public void toggle(Player player, LivingEntity ent, SkillRarity rarity, int level) {
+		// TODO Auto-generated method stub
+		
 	}
 }

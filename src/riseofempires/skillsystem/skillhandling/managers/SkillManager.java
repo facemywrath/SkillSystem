@@ -1,6 +1,8 @@
 package riseofempires.skillsystem.skillhandling.managers;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -8,6 +10,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.util.Vector;
 
 import net.md_5.bungee.api.ChatColor;
 import riseofempires.core.main.Core;
@@ -82,6 +85,27 @@ public class SkillManager {
 				skill.sendCastMessage(player, rarity, level);
 			}
 		}
+		if(skill.getUsage() == SkillUsage.TARGET)
+		{
+			float range = skill.getRange(rarity) + skill.getScaling().getRange()*level;
+			LivingEntity target = getTargetEntity(player, range);
+			Block block = this.getTargetBlock(player, range);
+			if(target != null)
+			{
+				if(block == null || target.getLocation().distance(player.getLocation()) < block.getLocation().distance(player.getLocation()))
+				{
+					if(skill.cast(player, target, level, rarity))
+					{
+						skill.updateCooldown(player, (long) (skill.getCooldown(rarity) + skill.getScaling().getCooldown() * level));
+						skill.sendCastMessage(player, rarity, level);
+					}
+				}
+			}
+			else
+			{
+				player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4You need to target something."));
+			}
+		}
 	}
 
 	public void aoeDamage(Player player, Location loc, float radius, float damage)
@@ -126,6 +150,35 @@ public class SkillManager {
 	{
 		Block block = player.getTargetBlock(null, (int) range);
 		return block==null?null:block;
+	}
+	
+	public LivingEntity getTargetEntity(Player player, float range)
+	{
+		for(float i = 1; i < range; i+=0.5)
+		{
+			Location loc = player.getLocation().add(player.getLocation().getDirection().multiply(i));
+			List<Entity> entities = (List<Entity>) loc.getWorld().getNearbyEntities(loc, 0.5, 0.5, 0.5);
+			entities.addAll(loc.getWorld().getNearbyEntities(loc.clone().add(new Vector(0,1,0)), 0.5, 0.5, 0.5).stream().filter(ent -> !entities.contains(ent)).collect(Collectors.toList()));
+			if(entities.size() > 0)
+			{
+				float maxRange = range;
+				LivingEntity closest = null;
+				for(Entity entity : entities)
+				{
+					if(!(entity instanceof LivingEntity)) continue;
+					if(maxRange > entity.getLocation().distance(player.getLocation()))
+					{
+						closest = (LivingEntity) entity;
+						maxRange = (float) entity.getLocation().distance(player.getLocation());
+					}
+				}
+				if(closest != null)
+				{
+					return closest;
+				}
+			}
+		}
+		return null;
 	}
 
 	public static AbstractSkill getAbstractSkillByName(String str)
